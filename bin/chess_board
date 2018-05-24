@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+require_relative '../lib/piece.rb'
+require_relative '../lib/board.rb'
+
+BOARD_SIZE = 8
+input_required = true
+
+while input_required
+
+  puts "Enter the type of chess piece: "
+  piece = gets.chomp.downcase
+
+  moves = Piece.moves(piece)
+  unless moves
+    puts "Invalid Chess piece #{piece}"
+    break
+  end
+
+  puts "Enter the current position on chess board: "
+  position = gets.chomp
+
+  piece_position = position.split(//)
+  x = piece_position[0].codepoints[0] - 96 if !(position.empty?)
+  y = piece_position[1].to_i
+
+  if (position.length != 2 || x < 1 || x > BOARD_SIZE || y < 1 || y > BOARD_SIZE )
+    puts "Invalid position: #{position}"
+    exit 1
+  end
+
+  puts Board.possible_moves(piece, x, y).join(", ")
+
+  print "Do you wish to continue? (Press 'Y' to continue or 'ANY' key to exit): "
+  input_required = false unless %w(Y y Yes yes).include?(gets.chomp!)
+end
